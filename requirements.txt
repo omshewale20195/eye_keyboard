@@ -6,7 +6,7 @@ gaze-tracking==0.0.1
 itsdangerous==2.2.0
 Jinja2==3.1.5
 MarkupSafe==3.0.2
-numpy== 2.2.0
+numpy==1.25.2  # Corrected version compatible with Python 3.11
 opencv-python==3.4.16
 Werkzeug==3.1.3
-dlib == 19.17.0
+dlib==19.17.0
