@@ -1,6 +1,7 @@
 import cv2
 import time
-import pyttsx3
+
+#import pyttsx3
 import logging
 from flask import Flask, render_template, Response, jsonify, request
 from gaze_tracking import GazeTracking
