@@ -9,7 +9,7 @@ from gaze_tracking import GazeTracking
 gaze = GazeTracking()
 webcam = cv2.VideoCapture(0)
 
-while True:
+while True: 
     # We get a new frame from the webcam
     _, frame = webcam.read()
 

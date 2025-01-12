@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eye Tracking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4CAF50;
+        }
+        img {
+            max-width: 50%;
+            /* border-radius: 5px; */
+        }
+        body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+        margin: 0;
+      }
+
+      .keyboard {
+        display: grid;
+        grid-template-columns: repeat(10, 50px);
+        gap: 5px;
+        margin-bottom: 20px;
+      }
+
+      .key {
+        width: 50px;
+        height: 50px;
+        background-color: #ccc;
+        text-align: center;
+        line-height: 50px;
+        border: 1px solid #888;
+        font-size: 18px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        border-radius: 15px;
+
+      }
+
+      .key:hover {
+        background-color: #bbb;
+      }
+
+      .highlight {
+        background-color: red;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        transition: background-color 0.3s;
+        /* border-radius: 25px; */
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      button:disabled {
+        background-color: #d6d6d6;
+        cursor: not-allowed;
+      }
+
+      textarea {
+        /* margin-bottom: 20px; */
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        max-width: 800px;
+        resize: none;
+        height: 100px !important;
+      }
+      .Img{
+        height: 200px;
+      }
+    </style>
+</head>
+<body>
+
+<img src="{{ url_for('video_feed') }}" alt="Eye Tracking Video Feed" class="Img">
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keyboard Column Highlight</title>
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <textarea
+      id="textArea"
+      rows="5"
+      cols="10"
+      placeholder="Output will appear here..."
+    ></textarea>
+    <div class="keyboard" id="keyboard"></div>
+    <div class="controls">
+      <button id="leftBlink" onclick="buttonClicked('left')" aria-label="Move Left" >Left</button>
+      <button id="middleBlink" onclick="buttonClicked('center')" aria-label="Blink Column">Blink</button>
+      <button id="rightBlink" onclick="buttonClicked('blink')" aria-label="Move Right">Right</button>
+    </div>
+
+    <!-- <script>
+      const keyboard = document.getElementById('keyboard')
+      const textArea = document.getElementById('textArea')
+      const leftButton = document.getElementById('leftBlink')
+      const middleButton = document.getElementById('middleBlink')
+      const rightButton = document.getElementById('rightBlink')
+
+      const keys = [
+        'Q',
+        'W',
+        'E',
+        'R',
+        'T',
+        'Y',
+        'U',
+        'I',
+        'O',
+        'P',
+        'A',
+        'S',
+        'D',
+        'F',
+        'G',
+        'H',
+        'J',
+        'K',
+        'L',
+        '',
+        'Z',
+        'X',
+        'C',
+        'V',
+        'B',
+        'N',
+        'M',
+        'bks'
+      ]
+
+      // Generate the keyboard keys dynamically
+      keys.forEach(key => {
+        const keyDiv = document.createElement('div')
+        keyDiv.className = 'key'
+        keyDiv.textContent = key
+        keyboard.appendChild(keyDiv)
+      })
+
+      const allKeys = document.querySelectorAll('.key')
+      const columns = 10
+      let currentColumn = 0
+      let blinkInterval
+      let currentKeyIndex = 0
+
+      function highlightColumn(colIndex) {
+        allKeys.forEach(key => key.classList.remove('highlight'))
+        for (let i = colIndex; i < allKeys.length; i += columns) {
+          allKeys[i].classList.add('highlight')
+        }
+      }
+
+      function blinkColumn(colIndex) {
+        const columnKeys = []
+        for (let i = colIndex; i < allKeys.length; i += columns) {
+          columnKeys.push(allKeys[i])
+        }
+
+        if (blinkInterval) clearInterval(blinkInterval)
+
+        blinkInterval = setInterval(() => {
+          columnKeys.forEach(key => key.classList.remove('highlight'))
+          columnKeys[currentKeyIndex].classList.add('highlight')
+
+          currentKeyIndex = (currentKeyIndex + 1) % columnKeys.length
+        }, 2000)
+      }
+
+      function stopBlinking() {
+        if (blinkInterval) clearInterval(blinkInterval)
+        blinkInterval = null
+        allKeys.forEach(key => key.classList.remove('highlight'))
+      }
+
+      //   // Button event listeners
+      //   leftButton.addEventListener('click', () => {
+      //     stopBlinking()
+      //     if (currentColumn > 0) {
+      //       currentColumn--
+      //     }
+      //     currentKeyIndex = 0
+      //     highlightColumn(currentColumn)
+      //     updateButtonState()
+      //   })
+
+      //   rightButton.addEventListener('click', () => {
+      //     stopBlinking()
+      //     if (currentColumn < columns - 1) {
+      //       currentColumn++
+      //     }
+      //     currentKeyIndex = 0
+      //     highlightColumn(currentColumn)
+      //     updateButtonState()
+      //   })
+
+      leftButton.addEventListener('click', () => {
+        stopBlinking() // Stop any ongoing blinking
+        if (currentColumn > 0) {
+          currentColumn-- // Move to the previous column
+        }
+        currentKeyIndex = 0 // Reset the key index
+        highlightColumn(currentColumn) // Automatically start highlighting the new column
+        updateButtonState() // Update button states
+        blinkColumn(currentColumn) // Automatically start the blinking function
+      })
+
+      rightButton.addEventListener('click', () => {
+        stopBlinking() // Stop any ongoing blinking
+        if (currentColumn < columns - 1) {
+          currentColumn++ // Move to the next column
+        }
+        currentKeyIndex = 0 // Reset the key index
+        highlightColumn(currentColumn) // Automatically start highlighting the new column
+        updateButtonState() // Update button states
+        blinkColumn(currentColumn) // Automatically start the blinking function
+      })
+      middleButton.addEventListener('click', () => {
+        const columnKeys = []
+        for (let i = currentColumn; i < allKeys.length; i += columns) {
+          columnKeys.push(allKeys[i])
+        }
+
+        // Get the currently highlighted key
+        const currentHighlightedKey =
+          columnKeys[
+            (currentKeyIndex - 1 + columnKeys.length) % columnKeys.length
+          ]
+
+        // If "bks" (backspace) key is pressed, delete the last character
+        if (
+          currentHighlightedKey &&
+          currentHighlightedKey.textContent === 'bks'
+        ) {
+          textArea.value = textArea.value.slice(0, -1) // Remove last character
+        } else if (
+          currentHighlightedKey &&
+          currentHighlightedKey.textContent !== ''
+        ) {
+          textArea.value += currentHighlightedKey.textContent // Add highlighted key to textarea
+        }
+
+        // Restart blinking for the current column
+        blinkColumn(currentColumn)
+      })
+
+      // Function to update button states
+      function updateButtonState() {
+        leftButton.disabled = currentColumn === 0
+        rightButton.disabled = currentColumn === columns - 1
+      }
+
+      // Initialize with first column highlighted
+      highlightColumn(currentColumn)
+      updateButtonState()
+    </script>
+  -->
+
+  <script>
+  const keyboard = document.getElementById('keyboard');
+  const textArea = document.getElementById('textArea');
+  const leftButton = document.getElementById('leftBlink');
+  const middleButton = document.getElementById('middleBlink');
+  const rightButton = document.getElementById('rightBlink');
+
+  const keys = [
+    'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+    'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', '',
+    'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'bks'
+  ];
+
+  const columns = 10;
+  let currentColumn = 0;
+  let currentKeyIndex = 0;
+  let blinkInterval;
+
+  // Generate the keyboard keys dynamically
+  keys.forEach(key => {
+    const keyDiv = document.createElement('div');
+    keyDiv.className = 'key';
+    keyDiv.textContent = key;
+    keyboard.appendChild(keyDiv);
+  });
+
+  const allKeys = document.querySelectorAll('.key');
+
+  function highlightColumn(colIndex) {
+    allKeys.forEach(key => key.classList.remove('highlight'));
+    for (let i = colIndex; i < allKeys.length; i += columns) {
+      allKeys[i].classList.add('highlight');
+    }
+  }
+
+  function blinkColumn(colIndex) {
+    const columnKeys = [];
+    for (let i = colIndex; i < allKeys.length; i += columns) {
+      columnKeys.push(allKeys[i]);
+    }
+
+    if (blinkInterval) clearInterval(blinkInterval);
+
+    blinkInterval = setInterval(() => {
+      columnKeys.forEach(key => key.classList.remove('highlight'));
+      columnKeys[currentKeyIndex].classList.add('highlight');
+
+      currentKeyIndex = (currentKeyIndex + 1) % columnKeys.length;
+    }, 2000);
+  }
+
+  function stopBlinking() {
+    if (blinkInterval) clearInterval(blinkInterval);
+    blinkInterval = null;
+    allKeys.forEach(key => key.classList.remove('highlight'));
+  }
+
+  function updateButtonState() {
+    leftButton.disabled = currentColumn === 0;
+    rightButton.disabled = currentColumn === columns - 1;
+  }
+leftButton.addEventListener('click', () => {
+  stopBlinking();
+
+  if (currentColumn === 0) {
+    currentColumn = columns - 1; // Move to the last column
+  } else {
+    currentColumn--;
+  }
+
+  currentKeyIndex = 0;
+  highlightColumn(currentColumn);
+  updateButtonState();
+  blinkColumn(currentColumn);
+});
+
+  rightButton.addEventListener('click', () => {
+    stopBlinking();
+    if (currentColumn < columns - 1) {
+      currentColumn++;
+    }
+    currentKeyIndex = 0;
+    highlightColumn(currentColumn);
+    updateButtonState();
+    blinkColumn(currentColumn);
+  });
+
+  middleButton.addEventListener('click', () => {
+    const columnKeys = [];
+    for (let i = currentColumn; i < allKeys.length; i += columns) {
+      columnKeys.push(allKeys[i]);
+    }
+
+    const currentHighlightedKey = columnKeys[(currentKeyIndex - 1 + columnKeys.length) % columnKeys.length];
+
+    if (currentHighlightedKey && currentHighlightedKey.textContent === 'bks') {
+      textArea.value = textArea.value.slice(0, -1);
+    } else if (currentHighlightedKey && currentHighlightedKey.textContent !== '') {
+      textArea.value += currentHighlightedKey.textContent;
+    }
+
+    blinkColumn(currentColumn);
+  });
+
+  // Initialize with first column highlighted
+  highlightColumn(currentColumn);
+  updateButtonState();
+
+  // Gaze state logic
+  function fetchGazeState() {
+    fetch('/gaze_state')
+      .then(response => response.json())
+      .then(data => {
+        const gazeState = data.gaze_state;
+        updateButtonStatus(gazeState);
+      })
+      .catch(error => {
+        console.error('Error fetching gaze state:', error);
+      });
+  }
+
+  function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+
+function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+
+function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+
+
+function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+
+function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+function updateButtonStatus(state) {
+  // Reset all buttons to inactive
+  leftButton.classList.remove('active');
+  middleButton.classList.remove('active');
+  rightButton.classList.remove('active');
+
+  // Activate the corresponding button based on gaze state
+  if (state === 'left') {
+    leftButton.classList.add('active');
+    leftButton.click(); // Trigger left button click
+  } else if (state === 'blinking') {
+    middleButton.classList.add('active');
+    middleButton.click(); // Trigger middle button click
+  } else if (state === 'right') {
+    rightButton.classList.add('active');
+    rightButton.click(); // Trigger right button click
+  }
+}
+
+  // function updateButtonStatus(state) {
+  //   // Reset all buttons to inactive
+  //   leftButton.classList.remove('active');
+  //   rightButton.classList.remove('active');
+  //   middleButton.classList.remove('active');
+
+  //   // Activate the corresponding button based on gaze state
+  //   if (state === 'left') {
+  //     leftButton.classList.add('active');
+  //     leftButton.click(); // Trigger left button click
+  //   } else if (state === 'center') {
+  //     middleButton.classList.add('active');
+  //     middleButton.click(); // Trigger middle button click
+  //   } else if (state === 'blinking') {
+  //     rightButton.classList.add('active');
+  //     rightButton.click(); // Trigger right button click
+  //   }
+  // }
+
+  // // Continuously fetch the gaze state every 1s
+  setInterval(fetchGazeState, 500 );
+</script>
+
+</body>
+</html>
